@@ -35,6 +35,8 @@
 
 #gh-right-container #gh-subheader form {
     margin: 0;
+    min-width: 960px;
+    overflow: hidden;
     padding: 28px 0 0;
 }
 
@@ -57,10 +59,6 @@
 /************/
 /* CALENDAR */
 /************/
-
-.fc-view {
-    z-index: -1;
-}
 
 #gh-calendar-container,
 .gh-toolbar-secondary {
@@ -85,8 +83,8 @@
 .gh-toolbar-primary {
     height: 44px;
     left: 320px;
-    position: fixed;
     right: 0;
+    z-index: 2;
 }
 
 .gh-toolbar-primary .gh-toolbar-views,
@@ -97,7 +95,16 @@
 /* Secondary toolbar */
 #gh-calendar-toolbar .gh-toolbar-secondary {
     font-weight: 800;
-    padding-top: 80px;
+    padding-top: 40px;
+    position: relative;
+}
+
+#gh-calendar-toolbar .gh-toolbar-secondary #gh-calendar-toolbar-period,
+#gh-calendar-toolbar .gh-toolbar-secondary #gh-calendar-toolbar-terms {
+    display: table;
+    height: 32px;
+    position: relative;
+    z-index: 1;
 }
 
 #gh-calendar-toolbar .gh-toolbar-secondary .btn-default.gh-btn-tertiary {
@@ -106,6 +113,23 @@
 
 #gh-calendar-toolbar .gh-toolbar-secondary .btn-default.gh-btn-tertiary i {
     padding: 0;
+}
+
+.gh-toolbar-inner {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+}
+
+/* Today button */
+#gh-calendar-toolbar .gh-toolbar-secondary #gh-calendar-toolbar-today {
+    height: 32px;
+    position: absolute;
+    width: 100%;
+}
+
+#gh-calendar-toolbar .gh-toolbar-secondary #gh-btn-calendar-today {
+    border: none;
 }
 
 /* Calendar (assumes weekly view and other views inherit unless otherwise specified) */
@@ -192,6 +216,11 @@
     border: none;
     border-left-style: solid;
     border-left-width: 5px;
+    cursor: pointer;
+}
+
+.fc-event-container .fc-event.highlighted {
+    z-index: 1000 !important;
 }
 
 .fc-event-container .fc-event .fc-content {
@@ -201,10 +230,12 @@
 .fc-time-grid-event .fc-title,
 .fc-time-grid-event .fc-location {
     display: block !important;
-    margin: 4px 2px;
+    margin: 4px 6px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+}
+
+.fc-time-grid-event .fc-title {
+    font-weight: 400;
 }
 
 .fc-time-grid-event .fc-location {
@@ -410,7 +441,7 @@ tbody tr:last-child > td.fc-widget-content {
             transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s !important;
 }
 
-.chosen-container .chosen-results { 
+.chosen-container .chosen-results {
     margin: 0 8px 8px 0;
     max-height: 320px;
     padding: 0 0 0 8px;
@@ -422,4 +453,40 @@ tbody tr:last-child > td.fc-widget-content {
 
 .chosen-container .chosen-results li.highlighted {
     background-image: none;
+}
+
+
+/***********/
+/* POPOVER */
+/***********/
+
+.popover {
+    font-size: 12px;
+    max-width: 350px;
+    width: 350px;
+}
+
+.popover .popover-content {
+    margin: 12px 10px;
+}
+
+.popover h3 {
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    padding-bottom: 7px;
+}
+
+.popover p {
+    margin: 0 0 3px;
+}
+
+.popover small {
+    border-top-style: solid;
+    border-top-width: 1px;
+    display: block;
+    margin-top: 15px;
+    padding-top: 7px;
 }
