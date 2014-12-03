@@ -1,16 +1,64 @@
+####################################################################################################
+## Notes to self - shouldn't really be in this file, but quick and dirty place to store it for now
+## Mostly notes about how to adapt .travis.yml to a plain Ubuntu build
+####################################################################################################
+
+
+##### TODO: Compare all against Travis log
+##### TODO: Go back to comparing with README.md for both grasshopper and grasshopper-ui
+
+
+##### General Environment #####
+
+# http://docs.travis-ci.com/user/ci-environment/#CI-environment-OS
+# Travis CI virtual machines are based on Ubuntu 12.04 LTS Server Edition 64 bit ...
+
+# http://docs.travis-ci.com/user/ci-environment/#Environment-common-to-all-VM-images
+# this explains how some stuff is already magically there (like git, PhantomJS etc)
+
+
+##### Installing Node.js ...
+
 language: node_js
 node_js:
   - "0.10.33"
+# https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
+# https://deb.nodesource.com/setup magically (scarily!) configures apt-get to just do the right thing (urgh) - but nicer than non apt ??
+# maybe do this locally/fork it locally etc - although it will be different from travis.
+# TRY Paste this at end of sources.list for now
+deb https://deb.nodesource.com/node precise main
+deb-src https://deb.nodesource.com/node precise main
+# then
+curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+apt-get update
+apt-cache showpkg nodejs # shows 0.10.33 at the moment
+# Travis log appears to use "nvm install 0.10.33"
+
+# http://achinth.com/post/58263924087/installing-node-js-using-nvm-on-ubuntu
+# https://raw.githubusercontent.com/creationix/nvm/master/install.sh # argh more scary run stuff off the web as root
+
 
 branches:
   only:
     - master
 
+###### PostgreSQL
+
 addons:
   postgresql: "9.3"
+# Is "addon" the same as just psql or is it an addon for node.js?
+apt-get install postgresql # actually installs 9.1 ??
+# [start postgresql is built in]
+# [lazy posgresql setup variation below]
+apt-get install nodejs # actually installs 0.6.12 ?? see above to fix it
+# [ignore grunt-cli for now]
+
+###### Git
+apt-get install git
 
 before_install:
 
+# TODO: Parameterise these hostnames, as they are referred to in other files?
   # Create virtual hosts
   - sudo sed -i "2i127.0.0.2  2014.cam.timetable.grasshopper.com" /etc/hosts
   - sudo sed -i "2i127.0.0.2  2013.cam.timetable.grasshopper.com" /etc/hosts
@@ -19,7 +67,11 @@ before_install:
   - cat /etc/hosts
 
   # Install test dependencies
+## TODO: work out whether we need these /test/ dependencies on a production server?
+# sudo?
   - npm install -g casperjs
+# ALSO
+(sudo) npm install -g phantomjs
 
   # Show the CasperJS and PhantomJS version for debugging purposes
   - casperjs --version
