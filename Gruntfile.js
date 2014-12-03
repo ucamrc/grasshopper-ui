@@ -1,4 +1,8 @@
 /*!
+**************************************************************************************
+*********** "Digital Services" - this may need revising in every boilerplate? ********
+*********** Doesn't seem to be complete anyway without mentioning CUL ****************
+**************************************************************************************
  * Copyright 2014 Digital Services, University of Cambridge Licensed
  * under the Educational Community License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the

@@ -4,7 +4,9 @@
 ####################################################################################################
 
 
-##### TODO: Compare all against Travis log
+##### TODO: Compare all against Travis log in more detail
+#####       I'm missing "install" part of lifecycle e.g. npm install after before_install; and the initial git checkout etc
+#####       Also check out where there are failures/distracting warnings etc
 ##### TODO: Go back to comparing with README.md for both grasshopper and grasshopper-ui
 
 
@@ -51,7 +53,11 @@ apt-get install postgresql # actually installs 9.1 ??
 # [start postgresql is built in]
 # [lazy posgresql setup variation below]
 apt-get install nodejs # actually installs 0.6.12 ?? see above to fix it
+
+###### Grunt CLI
 # [ignore grunt-cli for now]
+# --> actually needed later, see below, not sure where Travis gets it from
+sudo npm install -g grunt-cli
 
 ###### Git
 apt-get install git
@@ -68,6 +74,7 @@ before_install:
 
   # Install test dependencies
 ## TODO: work out whether we need these /test/ dependencies on a production server?
+##       (similarly test steps and coverage deps/steps)
 # sudo?
   - npm install -g casperjs
 # ALSO
@@ -79,10 +86,13 @@ before_install:
 
   # Prepare the machine
   - sudo apt-get update
+# mostly gcc and make ; probably similar to stuff already on Travis so possibly superfluous
+# But a bigger question (cf SG??) is whether it's appropriate to build Apache and dependencies from scratch?
   - sudo apt-get install build-essential
   - cd /usr/local/lib
 
   # Get Apache HTTP-server 2.4
+# apache 2.4 comes with trusty by default, but might not have apr/apr-util/pcre?
   - sudo wget http://lib.gblearn.com/apache/httpd-2.4.10.tar.gz -q
   - sudo tar xfz httpd-2.4.10.tar.gz
   - cd httpd-2.4.10/srclib/
@@ -129,20 +139,32 @@ before_install:
 
   # Install Grasshopper
   - echo 'Installing Grasshopper'
+# non-Travis:
+mkdir -p ~/build/CUL-DigitalServices
   - cd ~/build/CUL-DigitalServices
   - git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grasshopper.git ./grasshopper
   - cd ./grasshopper
+# sudo?
   - npm install --production
+# --production ??
 
   # Configure postgres
+########################
+########################
   - echo 'Creating database'
   - psql -c 'CREATE DATABASE grasshoppertest;' -U postgres
   - echo "config.db.username = 'postgres';" >> config.js
 
   # Install Grasshopper UI
   - echo 'Installing Grasshopper UI'
+# TRY
+git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grasshopper-ui.git ./grasshopper-ui
   - cd ~/build/CUL-DigitalServices/grasshopper-ui
+# sudo ???
   - npm install
+# this is where grunt-cli seems to be needed
+# TODO: find out more about how this grunt task works
+# TODO: review the apache config contents, e.g. log location, parameterise things, how much is 2.4-specific, how much is grasshopper, how much is grasshopper-ui
   - grunt configApache
   - sudo cp ./target/optimized/apache/httpd.conf /usr/local/apache2/conf/httpd.conf
   - sudo cp -R ./target/optimized/apache/app_*.conf /usr/local/apache2/conf/sites-enabled
@@ -151,17 +173,21 @@ before_install:
   - sudo /usr/local/apache2/bin/apachectl start
   - sleep 5
 
+##### missing implicit install step - seems to just do npm install ?
+
 script:
   - grunt test
 
 after_success:
   # Package and upload to Amazon S3
+# TODO: investigate this further: both the upload, and the deploy from upload (rather than using this build-system config which isn't production?)
   - ./etc/scripts/travis-upload.sh
 
 after_script:
   - grunt coveralls
 
 notifications:
+# TODO: have a look into these
   email:
     - bp323@cam.ac.uk
     - md623@cam.ac.uk
