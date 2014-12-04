@@ -7,8 +7,9 @@
 ##### TODO: Compare all against Travis log in more detail
 #####       I'm missing "install" part of lifecycle e.g. npm install after before_install; and the initial git checkout etc
 #####       Also check out where there are failures/distracting warnings etc
-##### TODO: Go back to comparing with README.md for both grasshopper and grasshopper-ui
 
+##### TODO: Go back to comparing with README.md for both grasshopper and grasshopper-ui
+##### TODO(ongoing): keep README.md in sync with this
 
 ##### General Environment #####
 
@@ -17,6 +18,10 @@
 
 # http://docs.travis-ci.com/user/ci-environment/#Environment-common-to-all-VM-images
 # this explains how some stuff is already magically there (like git, PhantomJS etc)
+
+# http://docs.travis-ci.com/user/installing-dependencies/
+# Lots of useful stuff, as well as:
+# "Our Linux environment is currently based on Ubuntu 12.04 LTS."
 
 
 ##### Installing Node.js ...
@@ -64,6 +69,7 @@ apt-get install git
 before_install:
 
 # TODO: Parameterise these hostnames, as they are referred to in other files?
+# URGH README.md is one of them, maybe we should keep them in a list and script it?
   # Create virtual hosts
   - sudo sed -i "2i127.0.0.2  2014.cam.timetable.grasshopper.com" /etc/hosts
   - sudo sed -i "2i127.0.0.2  2013.cam.timetable.grasshopper.com" /etc/hosts
@@ -89,6 +95,9 @@ sudo apt-get install libfontconfig1
   - sudo apt-get update
 # mostly gcc and make ; probably similar to stuff already on Travis so possibly superfluous
 # But a bigger question (cf SG??) is whether it's appropriate to build Apache and dependencies from scratch?
+# If we are going to build from source, let's pick a more official source than lib.gblearn.com
+# see http://httpd.apache.org/docs/2.4/install.html (as mentioned in README.md)
+## it explains the dependencies, and has more official mirrors than lib.gblearn.com
   - sudo apt-get install build-essential
   - cd /usr/local/lib
 
