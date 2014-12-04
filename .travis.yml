@@ -34,6 +34,7 @@ deb-src https://deb.nodesource.com/node precise main
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 apt-get update
 apt-cache showpkg nodejs # shows 0.10.33 at the moment
+apt-get install nodejs # without the above fixes, actually installs 0.6.12
 # Travis log appears to use "nvm install 0.10.33"
 
 # http://achinth.com/post/58263924087/installing-node-js-using-nvm-on-ubuntu
@@ -51,8 +52,6 @@ addons:
 # Is "addon" the same as just psql or is it an addon for node.js?
 apt-get install postgresql # actually installs 9.1 ??
 # [start postgresql is built in]
-# [lazy posgresql setup variation below]
-apt-get install nodejs # actually installs 0.6.12 ?? see above to fix it
 
 ###### Grunt CLI
 # [ignore grunt-cli for now]
@@ -79,6 +78,8 @@ before_install:
   - npm install -g casperjs
 # ALSO
 (sudo) npm install -g phantomjs
+# And apparently to make it work properly:
+sudo apt-get install libfontconfig1
 
   # Show the CasperJS and PhantomJS version for debugging purposes
   - casperjs --version
@@ -149,11 +150,19 @@ mkdir -p ~/build/CUL-DigitalServices
 # --production ??
 
   # Configure postgres
-########################
-########################
   - echo 'Creating database'
   - psql -c 'CREATE DATABASE grasshoppertest;' -U postgres
+# do this instead: config.db.database = 'grasshoppertest';
   - echo "config.db.username = 'postgres';" >> config.js
+# Also nb config.js has other useful stuff, e.g. config.servers admin.grasshopper.com:2000
+# TODO: parameterise config.js ?!!
+# Not sure how Travis manages to get away with such lightweight postgresql auth setup
+# subset of grasshopper README.md instructions are useful here:
+sudo -u postgres psql template1
+template1=# CREATE USER grasshopper WITH PASSWORD 'grasshopper';
+template1=# GRANT ALL PRIVILEGES ON DATABASE grasshoppertest TO grasshopper;
+# Test that it worked:
+psql -U grasshopper -h localhost grasshoppertest
 
   # Install Grasshopper UI
   - echo 'Installing Grasshopper UI'
@@ -165,15 +174,23 @@ git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grassho
 # this is where grunt-cli seems to be needed
 # TODO: find out more about how this grunt task works
 # TODO: review the apache config contents, e.g. log location, parameterise things, how much is 2.4-specific, how much is grasshopper, how much is grasshopper-ui
+# e.g. for my own testing purposes:
+sudo vim /usr/local/apache2/conf/sites-enabled/app_admin.conf # edit 127.0.0.1:80 to *:80 to make it work on 192.168.56.56
+sudo /usr/local/apache2/bin/apachectl restart
   - grunt configApache
   - sudo cp ./target/optimized/apache/httpd.conf /usr/local/apache2/conf/httpd.conf
   - sudo cp -R ./target/optimized/apache/app_*.conf /usr/local/apache2/conf/sites-enabled
 
   # Start Apache
+# TODO: this needs to be part of the Ubuntu system services on startup!
   - sudo /usr/local/apache2/bin/apachectl start
   - sleep 5
 
 ##### missing implicit install step - seems to just do npm install ?
+##### also start the grasshopper server:
+node app
+
+# (see rest.js files for REST endpoints)
 
 script:
   - grunt test
