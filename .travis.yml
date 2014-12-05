@@ -182,13 +182,21 @@ git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grassho
   - npm install
 # this is where grunt-cli seems to be needed
 # TODO: find out more about how this grunt task works
-# TODO: review the apache config contents, e.g. log location, parameterise things, how much is 2.4-specific, how much is grasshopper, how much is grasshopper-ui
+# TODO: review the apache config contents and understand how they work, e.g. log location, parameterise things, how much is 2.4-specific, how much is grasshopper, how much is grasshopper-ui
+# work out how best to do the multiple VirtualHosts in production (admin and tenants on separate interfaces?)
 # e.g. for my own testing purposes:
 sudo vim /usr/local/apache2/conf/sites-enabled/app_admin.conf # edit 127.0.0.1:80 to *:80 to make it work on 192.168.56.56
+sudo vim /usr/local/apache2/conf/sites-enabled/app_timetable.conf # edit 127.0.0.2:80 to *:80 to make it work on 192.168.56.56 , add ServerName directives for each of those in /etc/hosts above
 sudo /usr/local/apache2/bin/apachectl restart
   - grunt configApache
   - sudo cp ./target/optimized/apache/httpd.conf /usr/local/apache2/conf/httpd.conf
   - sudo cp -R ./target/optimized/apache/app_*.conf /usr/local/apache2/conf/sites-enabled
+# At first glance, looks like grasshopper-ui is just static files served through :2001 and apache
+# So just do
+cd build/CUL-DigitalServices/grasshopper-ui
+git pull
+# To update it (providing no dependencies need updating)
+# TODO: double-check just what the node content of this dir is - dependencies and testing? :2001 actually comes out of ../grasshopper 's server?
 
   # Start Apache
 # TODO: this needs to be part of the Ubuntu system services on startup!
@@ -196,8 +204,15 @@ sudo /usr/local/apache2/bin/apachectl restart
   - sleep 5
 
 ##### missing implicit install step - seems to just do npm install ? # which is probably duplicate?
+
 ##### also start the grasshopper server:
+# TODO: http://seanvbaker.com/setting-up-a-node-website/ - making an Ubuntu service out of "node server.js"
 node app
+
+# grasshopper is based on the "express" webapp framework (see package.json dependencies)
+# app.js is the starting point that calls node_modules/gh-core/lib/api.js - init
+# init calls initialiseExpressServers which then launches two Express servers
+# using node_modules/gh-core/lib/server.js - setUpServer
 
 # (see rest.js files for REST endpoints)
 
