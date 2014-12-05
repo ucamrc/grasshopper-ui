@@ -80,10 +80,10 @@ before_install:
   # Install test dependencies
 ## TODO: work out whether we need these /test/ dependencies on a production server?
 ##       (similarly test steps and coverage deps/steps)
-# sudo?
+# sudo: (needed for -g global install to /usr/lib/node_modules and /usr/bin, don't know why Travis works without it)
   - npm install -g casperjs
 # ALSO
-(sudo) npm install -g phantomjs
+sudo npm install -g phantomjs
 # And apparently to make it work properly:
 sudo apt-get install libfontconfig1
 
@@ -154,9 +154,9 @@ mkdir -p ~/build/CUL-DigitalServices
   - cd ~/build/CUL-DigitalServices
   - git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grasshopper.git ./grasshopper
   - cd ./grasshopper
-# sudo?
+# Install Grasshopper's dependencies (package.json) locally to ./node_modules
+# --production means ignore devDependencies
   - npm install --production
-# --production ??
 
   # Configure postgres
   - echo 'Creating database'
@@ -178,7 +178,7 @@ psql -U grasshopper -h localhost grasshoppertest
 # TRY
 git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grasshopper-ui.git ./grasshopper-ui
   - cd ~/build/CUL-DigitalServices/grasshopper-ui
-# sudo ???
+# Install Grasshopper UI's dependencies (package.json) locally to ./node_modules
   - npm install
 # this is where grunt-cli seems to be needed
 # TODO: find out more about how this grunt task works
@@ -195,7 +195,7 @@ sudo /usr/local/apache2/bin/apachectl restart
   - sudo /usr/local/apache2/bin/apachectl start
   - sleep 5
 
-##### missing implicit install step - seems to just do npm install ?
+##### missing implicit install step - seems to just do npm install ? # which is probably duplicate?
 ##### also start the grasshopper server:
 node app
 
