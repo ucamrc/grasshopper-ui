@@ -29,6 +29,7 @@
 language: node_js
 node_js:
   - "0.10.33"
+# grasshopper uses - "0.10.30" ??
 # https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
 # https://deb.nodesource.com/setup magically (scarily!) configures apt-get to just do the right thing (urgh) - but nicer than non apt ??
 # maybe do this locally/fork it locally etc - although it will be different from travis.
@@ -152,6 +153,7 @@ sudo apt-get install libfontconfig1
 # non-Travis:
 mkdir -p ~/build/CUL-DigitalServices
   - cd ~/build/CUL-DigitalServices
+# depth=1 is important - it doesn't clone the rest of the history
   - git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grasshopper.git ./grasshopper
   - cd ./grasshopper
 # Install Grasshopper's dependencies (package.json) locally to ./node_modules
@@ -172,6 +174,14 @@ template1=# CREATE USER grasshopper WITH PASSWORD 'grasshopper';
 template1=# GRANT ALL PRIVILEGES ON DATABASE grasshoppertest TO grasshopper;
 # Test that it worked:
 psql -U grasshopper -h localhost grasshoppertest
+
+# TODO: compare with full Grasshopper README.md etc:
+psql template1
+    template1=# CREATE USER grasshopper WITH PASSWORD 'grasshopper';
+    template1=# CREATE DATABASE grasshopper;
+    template1=# CREATE DATABASE grasshoppertest;
+    template1=# GRANT ALL PRIVILEGES ON DATABASE grasshopper TO grasshopper;
+    template1=# GRANT ALL PRIVILEGES ON DATABASE grasshoppertest TO grasshopper;
 
   # Install Grasshopper UI
   - echo 'Installing Grasshopper UI'
@@ -205,7 +215,8 @@ git pull
 
 ##### missing implicit install step - seems to just do npm install ? # which is probably duplicate?
 
-##### also start the grasshopper server:
+##### also start the grasshopper server (as per its README.md):
+# Not exactly sure how Travis does it, probably part of "grunt test" - since it only needs for testing?
 # TODO: http://seanvbaker.com/setting-up-a-node-website/ - making an Ubuntu service out of "node server.js"
 node app
 
@@ -233,6 +244,7 @@ notifications:
     - bp323@cam.ac.uk
     - md623@cam.ac.uk
     - rwlc3@cam.ac.uk
+# TODO: add me to grasshopper travis as well
   irc:
     channels:
       - "irc.freenode.org#ucam-ds"
