@@ -154,6 +154,7 @@ sudo apt-get install libfontconfig1
 mkdir -p ~/build/CUL-DigitalServices
   - cd ~/build/CUL-DigitalServices
 # depth=1 is important - it doesn't clone the rest of the history
+# TODO: fix /CUL-DigitalServices/grasshopper/README.md so it doesn't refer to cloning fronteerio
   - git clone --branch master --depth=1 git://github.com/CUL-DigitalServices/grasshopper.git ./grasshopper
   - cd ./grasshopper
 # Install Grasshopper's dependencies (package.json) locally to ./node_modules
