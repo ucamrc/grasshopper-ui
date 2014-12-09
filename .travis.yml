@@ -70,6 +70,12 @@ apt-get install git
 before_install:
 
 # TODO: Parameterise these hostnames, as they are referred to in other files?
+#       Actually many of these references are just for tests during build, not production
+#       Only critical stuff is ./grasshopper/config.js - config.servers - adminHostname (default admin.grasshopper.com)
+#                              Apache config(s) - which will need to be different for production anyway (e.g. for https cert, auth etc)
+#                              ( /etc/hosts if necessary , also referred to in README.md )
+#       Not entirely sure where tenant hostnames are, perhaps they're done in the database?
+#       Can't seem to find any references in non-test code files.
 # URGH README.md is one of them, maybe we should keep them in a list and script it?
   # Create virtual hosts
   - sudo sed -i "2i127.0.0.2  2014.cam.timetable.grasshopper.com" /etc/hosts
