@@ -16,7 +16,7 @@ echo 'deb-src https://deb.nodesource.com/node precise main' >> /etc/apt/sources.
 curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
 apt-get update
 apt-cache showpkg nodejs # shows 0.10.33 at the moment
-apt-get install nodejs # without the above fixes, actually installs 0.6.12
+apt-get install -y nodejs # without the above fixes, actually installs 0.6.12
 
 # Travis log appears to use "nvm install 0.10.33"
 
@@ -30,7 +30,7 @@ apt-get install nodejs # without the above fixes, actually installs 0.6.12
 #  postgresql: "9.3"
 # Is "addon" the same as just psql or is it an addon for node.js?
 
-apt-get install postgresql # actually installs 9.1 ??
+apt-get install -y postgresql # actually installs 9.1 ??
 
 # [start postgresql is built in]
 
@@ -42,17 +42,17 @@ sudo -u postgres psql template1 -c 'GRANT ALL PRIVILEGES ON DATABASE grasshopper
 
 
 ###### Git
-apt-get install git
+apt-get install -y git
 
   # Prepare the machine
-apt-get update
+# DUPLICATE apt-get update
 # mostly gcc and make ; probably similar to stuff already on Travis so possibly superfluous
 # But a bigger question (cf SG??) is whether it's appropriate to build Apache and dependencies from scratch?
 # If we are going to build from source, let's pick a more official source than lib.gblearn.com
 # see http://httpd.apache.org/docs/2.4/install.html (as mentioned in README.md)
 ## it explains the dependencies, and has more official mirrors than lib.gblearn.com
 
-apt-get install build-essential
+apt-get install -y build-essential
 cd /usr/local/lib
 
   # Get Apache HTTP-server 2.4

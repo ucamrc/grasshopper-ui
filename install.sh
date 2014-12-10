@@ -1,3 +1,9 @@
+# TODO: do this for both files:
+
+# TODO: add echo statements to make clearer where we have got to
+# TODO: abort on error?
+# TODO: log output?
+
 mkdir -p ~/build/CUL-DigitalServices
 
   # Install Grasshopper
@@ -34,12 +40,16 @@ npm install
 #  - sudo cp ./target/optimized/apache/httpd.conf /usr/local/apache2/conf/httpd.conf
 #  - sudo cp -R ./target/optimized/apache/app_*.conf /usr/local/apache2/conf/sites-enabled
 
+echo Now put httpd.conf into /usr/local/apache2/conf/httpd.conf
+echo and app_*.conf and /usr/local/apache2/conf/sites-enabled
+
 
 ###### Start Apache ######
-###  - sudo /usr/local/apache2/bin/apachectl start
+echo sudo /usr/local/apache2/bin/apachectl start
 
 ##### also start the grasshopper server (as per its README.md):
-### node app
+echo cd ~/build/CUL-DigitalServices/grasshopper
+echo node app
 
 
 
