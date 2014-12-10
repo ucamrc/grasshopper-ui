@@ -41,10 +41,11 @@ npm install
 #  - sudo cp -R ./target/optimized/apache/app_*.conf /usr/local/apache2/conf/sites-enabled
 
 # As it turns out, ./target/optimized/apache/httpd.conf seems to be the same as ./grasshopper-ui/apache/httpd.conf
-echo sudo cp ~/build/CUL-DigitalServices/grasshopper-ui/apache/httpd.conf into /usr/local/apache2/conf/httpd.conf
+echo sudo cp ~/build/CUL-DigitalServices/grasshopper-ui/apache/httpd.conf /usr/local/apache2/conf/httpd.conf
 
-echo sudo cp ~/build/CUL-DigitalServices/grasshopper-ui/apache/temp/app_*.conf /usr/local/apache2/conf/sites-enabled
-echo Then edit them appropriately (notably they are hard-coded to /home/rwlc3):
+# These are only in my temporary branch
+echo sudo cp ./apache/temp/app_*.conf /usr/local/apache2/conf/sites-enabled
+echo Then edit them appropriately \(notably they are hard-coded to /home/rwlc3\):
 echo sudo vim /usr/local/apache2/conf/sites-enabled/app_*.conf
 
 
@@ -52,6 +53,7 @@ echo sudo vim /usr/local/apache2/conf/sites-enabled/app_*.conf
 echo sudo /usr/local/apache2/bin/apachectl start
 
 ##### also start the grasshopper server (as per its README.md):
+echo TODO this obviously wont persist when you logout
 echo cd ~/build/CUL-DigitalServices/grasshopper
 echo node app
 
