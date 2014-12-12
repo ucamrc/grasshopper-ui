@@ -1,6 +1,11 @@
 # TODO: guard against being run as non-root
 
-##### Installing Node.js ...
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Installing Git (in case not already installed)
+apt-get install -y git
+
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Installing Node.js
 
 #language: node_js
 #node_js:
@@ -24,7 +29,8 @@ apt-get install -y nodejs # without the above fixes, actually installs 0.6.12
 # https://raw.githubusercontent.com/creationix/nvm/master/install.sh # argh more scary run stuff off the web as root
 
 
-###### PostgreSQL
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Installing PostgreSQL and setting up databases and users
 
 #addons:
 #  postgresql: "9.3"
@@ -41,8 +47,8 @@ sudo -u postgres psql template1 -c 'GRANT ALL PRIVILEGES ON DATABASE grasshopper
 sudo -u postgres psql template1 -c 'GRANT ALL PRIVILEGES ON DATABASE grasshoppertest TO grasshopper;'
 
 
-###### Git
-apt-get install -y git
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Installing Pre-requisites for Apache
 
   # Prepare the machine
 # DUPLICATE apt-get update
@@ -93,11 +99,23 @@ make --silent
 make install --silent
 cd ../..
 
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Installing Apache
+
   # Install and configure Apache HTTPD 2.4
-echo 'Installing Apache'
 ./configure --prefix=/usr/local/apache2 --with-pcre=/usr/local/pcre --enable-so
 make --silent
 make install --silent
 cd /usr/local/apache2/conf
 mkdir sites-enabled
+
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Configuring /etc/hosts
+
+# admin.grasshopper.com for internal use only (e.g. via curl in setup scripts)
+# ARGH admin really does seem to need a separate hostname or port because
+# admin and tenant share /api ABSOLUTE path which is used by swagger as basePath? :-(
+# One workaround for now could be to use ssh with port-forwarding to 127.0.0.1 ?
+sudo sed -i "2i127.0.0.1 admin.grasshopper.com" /etc/hosts
+cat /etc/hosts
 
