@@ -1,5 +1,9 @@
 # TODO: guard against being run as non-root
 
+# sudo apt-get update
+# sudo apt-get install git
+# git clone --branch DeploymentTest201412 --depth=1 https://github.com/ucamrc/grasshopper-ui.git ./grasshopper-ui_DeploymentTest
+
 echo == == == == == == == == == == == == == == == == == == == == == == ==
 echo == Installing Node.js
 
@@ -26,7 +30,7 @@ apt-get install -y nodejs # without the above fixes, actually installs 0.6.12
 
 
 echo == == == == == == == == == == == == == == == == == == == == == == ==
-echo == Installing Git (in case not already installed)
+echo == Installing Git, in case not already installed
 apt-get install -y git
 
 echo == == == == == == == == == == == == == == == == == == == == == == ==
