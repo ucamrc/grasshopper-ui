@@ -1,10 +1,6 @@
 # TODO: guard against being run as non-root
 
 echo == == == == == == == == == == == == == == == == == == == == == == ==
-echo == Installing Git (in case not already installed)
-apt-get install -y git
-
-echo == == == == == == == == == == == == == == == == == == == == == == ==
 echo == Installing Node.js
 
 #language: node_js
@@ -28,6 +24,10 @@ apt-get install -y nodejs # without the above fixes, actually installs 0.6.12
 # http://achinth.com/post/58263924087/installing-node-js-using-nvm-on-ubuntu
 # https://raw.githubusercontent.com/creationix/nvm/master/install.sh # argh more scary run stuff off the web as root
 
+
+echo == == == == == == == == == == == == == == == == == == == == == == ==
+echo == Installing Git (in case not already installed)
+apt-get install -y git
 
 echo == == == == == == == == == == == == == == == == == == == == == == ==
 echo == Installing PostgreSQL and setting up databases and users
